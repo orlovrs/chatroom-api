@@ -101,7 +101,6 @@ namespace ChatRoomApi.Controllers
                 Time = DateTime.Now
             };
 
-            // TODO: Add SignalR to send a messages to client
             return new OkObjectResult(hubMessage);
         }
 

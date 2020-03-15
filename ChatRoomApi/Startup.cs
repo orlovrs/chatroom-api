@@ -1,3 +1,4 @@
+using ChatRoomApi.Hubs;
 using ChatRoomApi.Persistence;
 using ChatRoomApi.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,18 @@ namespace ChatRoomApi
             services.AddTransient<IChatRoomRepository, ChatRoomRepository>();
             services.AddTransient<IConnectionsRepository, ConnectionsRepository>();
 
+            services.AddSignalR();
+            services.AddCors(o =>
+            {
+                o.AddPolicy("AllowOrigin", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .Build();
+                });
+            });
+
             services.AddControllers();
         }
 
@@ -43,10 +56,12 @@ namespace ChatRoomApi
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors("AllowOrigin");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }
