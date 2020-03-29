@@ -28,17 +28,19 @@ namespace ChatRoomApi
             services.AddTransient<IChatRoomRepository, ChatRoomRepository>();
             services.AddTransient<IConnectionsRepository, ConnectionsRepository>();
 
-            services.AddSignalR();
             services.AddCors(o =>
             {
                 o.AddPolicy("AllowOrigin", builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder.WithOrigins("http://localhost:8080")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
+                        .AllowCredentials()
                         .Build();
                 });
             });
+
+            services.AddSignalR();
 
             services.AddControllers();
         }
@@ -61,7 +63,7 @@ namespace ChatRoomApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<ChatHub>("/ws");
             });
         }
     }

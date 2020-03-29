@@ -21,7 +21,7 @@ namespace ChatRoomApi.Persistence.Repositories
         {
             return _context.ChatRooms
                 .Include(u => u.Users)
-                .FirstOrDefault(x => x.Id == id && x.Status.Equals("live"));
+                .FirstOrDefault(x => x.Id == id && !x.Status.Equals("deleted"));
         }
 
         public void Create(ChatRoom chatroom)
@@ -33,6 +33,12 @@ namespace ChatRoomApi.Persistence.Repositories
         public void Delete(ChatRoom chatRoom)
         {
             chatRoom.Status = "deleted";
+            Save();
+        }
+
+        public void End(ChatRoom chatRoom)
+        {
+            chatRoom.Status = "ended";
             Save();
         }
     }

@@ -31,7 +31,8 @@ namespace ChatRoomApi.Controllers
             var newChatRoom = new ChatRoom
             {
                 Name = chatroom.Name,
-                Status = "live"
+                Status = "live",
+                Uuid = Guid.NewGuid().ToString()
             };
 
             ChatRoomRepository.Create(newChatRoom);
@@ -59,6 +60,18 @@ namespace ChatRoomApi.Controllers
             if (chatRoom == null) return new NotFoundObjectResult($"Cannot find chat room with id {id}");
 
             ChatRoomRepository.Delete(chatRoom);
+            return new OkObjectResult(new ChatRoomResponseDto(chatRoom));
+        }
+
+        [HttpPut]
+        public IActionResult EndById([FromQuery(Name = "id")] int id)
+        {
+            if (id == 0) return new NotFoundObjectResult("Cannot resolve this url");
+
+            var chatRoom = ChatRoomRepository.GetById(id);
+            if (chatRoom == null) return new NotFoundObjectResult($"Cannot find chat room with id {id}");
+
+            ChatRoomRepository.End(chatRoom);
             return new OkObjectResult(new ChatRoomResponseDto(chatRoom));
         }
 

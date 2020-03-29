@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using ChatRoomApi.Models.Dtos.Messages;
+using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace ChatRoomApi.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(int chatId, string user, string message)
+        public async Task SendMessage(MessageHub message)
         {
-            await Clients.Group($"{chatId}").SendAsync("ReceiveMessage", user, message);
+            message.Date = DateTime.Now;
+            await Clients.All.SendAsync("send", message);
         }
     }
 }

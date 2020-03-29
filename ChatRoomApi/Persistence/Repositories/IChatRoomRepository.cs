@@ -12,6 +12,7 @@ namespace ChatRoomApi.Persistence.Repositories
         void Create(ChatRoom chatroom);
 
         // DELETE
+        void End(ChatRoom chatRoom);
         void Delete(ChatRoom chatRoom);
 
         // SAVE CHANGES
